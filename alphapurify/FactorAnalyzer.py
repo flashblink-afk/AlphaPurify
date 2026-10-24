@@ -833,7 +833,7 @@ class FactorAnalyzer():
         
         common = df_prev.join(
             df_next,
-            on=[self.trade_date_col, "quantile", "g_prev", "g_next", "code"],
+            on=[self.trade_date_col, "quantile", "g_prev", "g_next", self.symbol_col],
             how="inner"
         )
 
@@ -1322,7 +1322,7 @@ class FactorAnalyzer():
         if self.group_by:
             df = df.with_columns([
                         pl.when(pl.col("fut_ret") == -1).then(None).otherwise(pl.col("fut_ret")).alias("fut_ret"),
-                pl.col("code").map_elements(lambda x: self.group_by.get(x, "Unlabels"), return_dtype=pl.Utf8).alias("industry")
+                pl.col(self.symbol_col).map_elements(lambda x: self.group_by.get(x, "Unlabels"), return_dtype=pl.Utf8).alias("industry")
             ])
         
         else:
@@ -1770,7 +1770,7 @@ class FactorAnalyzer():
 
         common = df_prev.join(
             df_next,
-            on=[self.trade_date_col, "quantile", "g_prev", "g_next", "code"],
+            on=[self.trade_date_col, "quantile", "g_prev", "g_next", self.symbol_col],
             how="inner"
         )
 
